@@ -19,11 +19,12 @@ import TraineeNotices from "./pages/trainee/TraineeNotices";
 
 // Trainer Pages
 import TrainerDashboard from "./pages/trainer/TrainerDashboard";
+import TrainerProfile from "./pages/trainer/TrainerProfile";
 import TrainerCourses from "./pages/trainer/TrainerCourses";
-import TrainerTrainees from "./pages/trainer/TrainerTrainees";
 import TrainerAssessments from "./pages/trainer/TrainerAssessments";
+import TrainerAssessmentNew from "./pages/trainer/TrainerAssessmentNew";
+import TrainerParticipation from "./pages/trainer/TrainerParticipation";
 import TrainerResources from "./pages/trainer/TrainerResources";
-import TrainerNotices from "./pages/trainer/TrainerNotices";
 
 export default function App() {
   return (
@@ -55,11 +56,12 @@ export default function App() {
           <Route path="/trainer" element={<DashboardLayout role="trainer" />}>
             <Route index element={<Navigate to="dashboard" replace />} />
             <Route path="dashboard" element={<TrainerDashboard />} />
+            <Route path="profile" element={<TrainerProfile />} />
             <Route path="courses" element={<TrainerCourses />} />
-            <Route path="trainees" element={<TrainerTrainees />} />
             <Route path="assessments" element={<TrainerAssessments />} />
+            <Route path="assessments/new" element={<TrainerAssessmentNew />} />
+            <Route path="participation" element={<TrainerParticipation />} />
             <Route path="resources" element={<TrainerResources />} />
-            <Route path="notices" element={<TrainerNotices />} />
             <Route path="*" element={<Navigate to="dashboard" replace />} />
           </Route>
 

@@ -28,12 +28,12 @@ export const defaultTraineeNav = [
 ];
 
 export const defaultTrainerNav = [
-  { name: "Trainer Hub", path: "/trainer/dashboard", icon: LayoutDashboard },
-  { name: "Course Curriculum", path: "/trainer/courses", icon: BookOpen },
-  { name: "Cohort Analytics", path: "/trainer/trainees", icon: Users },
-  { name: "Evaluation & Tests", path: "/trainer/assessments", icon: FileCheck2 },
-  { name: "Repository Assets", path: "/trainer/resources", icon: FolderDown },
-  { name: "Announcements", path: "/trainer/notices", icon: Bell },
+  { name: "Dashboard", path: "/trainer/dashboard", icon: LayoutDashboard },
+  { name: "My Profile", path: "/trainer/profile", icon: User },
+  { name: "My Courses", path: "/trainer/courses", icon: BookOpen },
+  { name: "Assessments", path: "/trainer/assessments", icon: FileCheck2 },
+  { name: "Participation", path: "/trainer/participation", icon: Users },
+  { name: "Resource Library", path: "/trainer/resources", icon: FolderDown },
 ];
 
 export default function Sidebar({

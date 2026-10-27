@@ -1,28 +1,32 @@
 import React from "react";
+import { useNavigate } from "react-router-dom";
 import PageHeader from "../../components/PageHeader";
 import StatCard from "../../components/StatCard";
-import DataTable from "../../components/DataTable";
 import Badge from "../../components/Badge";
-import ProgressBar from "../../components/ProgressBar";
 import { useAuth } from "../../context/AuthContext";
 import {
-  mockTrainees,
   mockAnalyticsData,
-  mockAssessments,
+  mockUsers,
 } from "../../data/mockData";
 import {
+  BookOpen,
   Users,
-  GraduationCap,
-  Award,
-  Star,
-  Plus,
-  TrendingUp,
-  Mail,
   FileCheck2,
+  TrendingUp,
+  Plus,
+  ArrowRight,
+  Clock,
+  Sparkles,
+  Award,
+  CheckCircle2,
+  AlertCircle,
+  FileText,
 } from "lucide-react";
 import {
   BarChart,
   Bar,
+  AreaChart,
+  Area,
   XAxis,
   YAxis,
   CartesianGrid,
@@ -32,152 +36,117 @@ import {
 
 export default function TrainerDashboard() {
   const { user } = useAuth();
+  const navigate = useNavigate();
 
-  const traineeColumns = [
-    {
-      key: "name",
-      label: "Trainee Officer",
-      render: (val, row) => (
-        <div className="flex items-center gap-3">
-          <img
-            src={row.avatar}
-            alt={val}
-            className="w-8 h-8 rounded-full object-cover border border-slate-200"
-          />
-          <div>
-            <span className="font-bold text-slate-900 block">{val}</span>
-            <span className="text-[11px] text-slate-400">{row.department}</span>
-          </div>
-        </div>
-      ),
-    },
-    {
-      key: "participation",
-      label: "Attendance %",
-      render: (val) => (
-        <div className="w-28">
-          <ProgressBar
-            value={val}
-            size="sm"
-            showLabel
-            variant={val >= 90 ? "emerald" : val >= 80 ? "teal" : "orange"}
-          />
-        </div>
-      ),
-    },
-    {
-      key: "averageScore",
-      label: "Average Score",
-      align: "right",
-      render: (val) => (
-        <span className="font-bold text-slate-900">{val}%</span>
-      ),
-    },
-    {
-      key: "status",
-      label: "Standing",
-      render: (val) => (
-        <Badge
-          variant={val === "Active" ? "success" : "warning"}
-          size="sm"
-        >
-          {val}
-        </Badge>
-      ),
-    },
-    {
-      key: "actions",
-      label: "Action",
-      align: "right",
-      render: (_, row) => (
-        <button
-          onClick={() => alert(`Reviewing dossier for: ${row.name}`)}
-          className="text-xs font-bold text-teal-700 hover:text-teal-900"
-        >
-          View Record
-        </button>
-      ),
-    },
-  ];
+  const trainer = {
+    ...mockUsers.trainer,
+    ...user,
+  };
+
+  const recentActivity = mockAnalyticsData.recentActivity || [];
+  const scoreData = mockAnalyticsData.averageScorePerCourse || [];
+  const participationData = mockAnalyticsData.participationOverWeeks || [];
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-8 font-sans">
       <PageHeader
-        title={`Faculty Portal: ${user?.name || "Dr. Priya Venkatesh"}`}
-        subtitle="Departmental cohort monitoring, assessment evaluations, and learning analytics."
+        title={`Welcome, ${trainer.name}`}
+        subtitle="Faculty command center: monitor course benchmarks, review cohort participation trends, and track real-time trainee submissions."
         badgeText="Faculty Lead"
         badgeVariant="primary"
       >
         <button
-          onClick={() => alert("Launching Assessment Authoring Wizard...")}
+          onClick={() => navigate("/trainer/assessments/new")}
           className="inline-flex items-center gap-2 px-4 py-2 rounded-xl text-xs font-bold text-slate-950 bg-accent-gradient hover:opacity-95 shadow-sm transition-all"
         >
           <Plus className="w-4 h-4 text-slate-950" />
-          <span>New Assessment</span>
+          <span>Create Assessment</span>
         </button>
       </PageHeader>
 
-      {/* Metrics Row */}
+      {/* 4 StatCards Row */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
         <StatCard
-          title="Assigned Trainees"
-          value={user?.assignedTrainees || 148}
-          subtitle="Across 3 ministerial departments"
-          icon={Users}
+          title="Active Courses"
+          value={trainer.activeCoursesCount || 6}
+          subtitle="All curriculum units active"
+          icon={BookOpen}
           iconBg="bg-teal-50 text-brand-teal border-teal-100"
+          trend="Published"
+          trendUp={true}
+          onClick={() => navigate("/trainer/courses")}
+        />
+        <StatCard
+          title="Total Trainees"
+          value={trainer.totalTraineesCount || 148}
+          subtitle="Enrolled civil officers"
+          icon={Users}
+          iconBg="bg-indigo-50 text-indigo-600 border-indigo-100"
           trend="+12 this month"
           trendUp={true}
+          onClick={() => navigate("/trainer/participation")}
         />
         <StatCard
-          title="Active Cohorts"
-          value={user?.activeCohorts || 3}
-          subtitle="Batch 2026-A, 2026-B, 2026-C"
-          icon={GraduationCap}
-          iconBg="bg-purple-50 text-purple-600 border-purple-100"
+          title="Assessments Created"
+          value={trainer.assessmentsCreatedCount || 5}
+          subtitle="Periodic evaluations & tests"
+          icon={FileCheck2}
+          iconBg="bg-purple-50 text-[#6d5cae] border-purple-100"
+          trend="2 live"
+          trendUp={true}
+          onClick={() => navigate("/trainer/assessments")}
         />
         <StatCard
-          title="Cohort Average Score"
-          value={`${user?.avgCohortScore || 86.4}%`}
-          subtitle="Exceeds national benchmark (80%)"
+          title="Average Performance %"
+          value={`${trainer.averagePerformance || 86.4}%`}
+          subtitle="Benchmark passing rate"
           icon={TrendingUp}
-          iconBg="bg-emerald-50 text-emerald-600 border-emerald-100"
-          trend="+2.1%"
-          trendUp={true}
-        />
-        <StatCard
-          title="Trainer Rating"
-          value={`${user?.rating || 4.9} / 5.0`}
-          subtitle="From 230 officer reviews"
-          icon={Star}
           iconBg="bg-amber-50 text-brand-orange border-amber-100"
-          trend="Top 1%"
+          trend="+3.2% vs baseline"
           trendUp={true}
+          onClick={() => navigate("/trainer/participation")}
         />
       </div>
 
-      {/* Analytics Chart & Performance breakdown */}
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-        <div className="lg:col-span-2 bg-white rounded-xl border border-slate-200/80 p-5 shadow-soft">
+      {/* Analytics Charts Grid */}
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        {/* Chart 1: Bar Chart of Average Score Per Course */}
+        <div className="bg-white rounded-2xl border border-slate-200/80 p-5 sm:p-6 shadow-soft flex flex-col justify-between">
           <div className="flex items-center justify-between mb-4">
             <div>
               <h3 className="text-base font-bold text-slate-900">
-                Department Performance Comparison
+                Average Score Per Course
               </h3>
               <p className="text-xs text-slate-500 mt-0.5">
-                Average evaluation scores across enrolled wings
+                Evaluation mean across curriculum tracks
               </p>
             </div>
             <span className="text-xs font-semibold px-2.5 py-1 rounded-full bg-slate-100 text-slate-700">
-              Mean: 87.1%
+              Avg: 87.8%
             </span>
           </div>
 
           <div className="h-64 w-full">
             <ResponsiveContainer width="100%" height="100%">
-              <BarChart data={mockAnalyticsData.departmentScores} barSize={32}>
+              <BarChart data={scoreData} barSize={28}>
                 <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#f1f5f9" />
-                <XAxis dataKey="name" stroke="#94a3b8" fontSize={11} tickLine={false} />
-                <YAxis stroke="#94a3b8" fontSize={11} tickLine={false} axisLine={false} domain={[60, 100]} />
+                <XAxis
+                  dataKey="course"
+                  stroke="#94a3b8"
+                  fontSize={10}
+                  tickLine={false}
+                  interval={0}
+                  tickFormatter={(val) =>
+                    val.length > 12 ? `${val.substring(0, 10)}...` : val
+                  }
+                />
+                <YAxis
+                  stroke="#94a3b8"
+                  fontSize={11}
+                  tickLine={false}
+                  axisLine={false}
+                  domain={[60, 100]}
+                />
                 <Tooltip
                   contentStyle={{
                     backgroundColor: "#0f172a",
@@ -186,60 +155,165 @@ export default function TrainerDashboard() {
                     color: "#fff",
                     fontSize: "12px",
                   }}
+                  formatter={(value) => [`${value}%`, "Average Score"]}
                 />
-                <Bar dataKey="score" fill="#7cc4c4" radius={[6, 6, 0, 0]} />
+                <Bar
+                  dataKey="score"
+                  fill="#7cc4c4"
+                  radius={[6, 6, 0, 0]}
+                />
               </BarChart>
             </ResponsiveContainer>
           </div>
         </div>
 
-        {/* Score Distribution Breakdown */}
-        <div className="bg-white rounded-xl border border-slate-200/80 p-5 shadow-soft flex flex-col justify-between">
-          <div>
-            <h3 className="text-base font-bold text-slate-900">
-              Grade Distribution
-            </h3>
-            <p className="text-xs text-slate-500 mt-0.5">
-              Trainee cohort score brackets
-            </p>
-
-            <div className="space-y-4 mt-5">
-              {mockAnalyticsData.assessmentDistribution.map((item, idx) => (
-                <div key={idx} className="space-y-1.5">
-                  <div className="flex items-center justify-between text-xs font-semibold text-slate-700">
-                    <span>{item.range}</span>
-                    <span>{item.count} Officers</span>
-                  </div>
-                  <div className="w-full h-2 bg-slate-100 rounded-full overflow-hidden">
-                    <div
-                      className="h-full rounded-full transition-all duration-500"
-                      style={{
-                        width: `${(item.count / 148) * 100}%`,
-                        backgroundColor: item.fill,
-                      }}
-                    />
-                  </div>
-                </div>
-              ))}
+        {/* Chart 2: Area / Line Chart of Participation Over the Last 6 Weeks */}
+        <div className="bg-white rounded-2xl border border-slate-200/80 p-5 sm:p-6 shadow-soft flex flex-col justify-between">
+          <div className="flex items-center justify-between mb-4">
+            <div>
+              <h3 className="text-base font-bold text-slate-900">
+                Participation Over the Last 6 Weeks
+              </h3>
+              <p className="text-xs text-slate-500 mt-0.5">
+                Active officer engagement and attendance momentum
+              </p>
             </div>
+            <Badge variant="success" size="sm">
+              +18% Growth
+            </Badge>
           </div>
 
-          <div className="pt-4 border-t border-slate-100 text-xs text-slate-500">
-            Total 148 actively evaluated trainees.
+          <div className="h-64 w-full">
+            <ResponsiveContainer width="100%" height="100%">
+              <AreaChart data={participationData}>
+                <defs>
+                  <linearGradient id="trainerPartGrad" x1="0" y1="0" x2="0" y2="1">
+                    <stop offset="5%" stopColor="#a99bf0" stopOpacity={0.4} />
+                    <stop offset="95%" stopColor="#a99bf0" stopOpacity={0.0} />
+                  </linearGradient>
+                </defs>
+                <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#f1f5f9" />
+                <XAxis dataKey="week" stroke="#94a3b8" fontSize={11} tickLine={false} />
+                <YAxis
+                  stroke="#94a3b8"
+                  fontSize={11}
+                  tickLine={false}
+                  axisLine={false}
+                  domain={[60, 100]}
+                />
+                <Tooltip
+                  contentStyle={{
+                    backgroundColor: "#0f172a",
+                    border: "none",
+                    borderRadius: "0.75rem",
+                    color: "#fff",
+                    fontSize: "12px",
+                  }}
+                  formatter={(value) => [`${value}%`, "Participation Rate"]}
+                />
+                <Area
+                  type="monotone"
+                  dataKey="rate"
+                  stroke="#a99bf0"
+                  strokeWidth={2.5}
+                  fillOpacity={1}
+                  fill="url(#trainerPartGrad)"
+                />
+              </AreaChart>
+            </ResponsiveContainer>
           </div>
         </div>
       </div>
 
-      {/* Trainees List DataTable */}
-      <DataTable
-        title="Enrolled Officers Roster"
-        subtitle="Live participation and academic performance metrics"
-        columns={traineeColumns}
-        data={mockTrainees}
-        searchKey="name"
-        searchPlaceholder="Search officer by name..."
-        itemsPerPage={6}
-      />
+      {/* Recent Activity List & Quick Actions */}
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+        {/* Recent Activity (2 Cols) */}
+        <div className="lg:col-span-2 bg-white rounded-2xl border border-slate-200/80 p-5 sm:p-6 shadow-soft">
+          <div className="flex items-center justify-between pb-3 mb-4 border-b border-slate-100">
+            <div>
+              <h3 className="text-base font-bold text-slate-900">Recent Activity</h3>
+              <p className="text-xs text-slate-500">Live submissions and student engagement feed</p>
+            </div>
+            <span className="text-xs text-slate-400 font-semibold">Live updates</span>
+          </div>
+
+          <div className="divide-y divide-slate-100 space-y-2">
+            {recentActivity.map((item) => (
+              <div
+                key={item.id}
+                className="pt-3 first:pt-0 flex items-center justify-between gap-3 p-2 rounded-xl hover:bg-slate-50 transition-colors"
+              >
+                <div className="flex items-center gap-3 min-w-0">
+                  <img
+                    src={item.avatar}
+                    alt={item.user}
+                    className="w-9 h-9 rounded-full object-cover border border-slate-200 shrink-0"
+                  />
+                  <div className="min-w-0">
+                    <p className="text-xs font-bold text-slate-900 truncate">
+                      {item.user}{" "}
+                      <span className="font-normal text-slate-500">
+                        {item.action}
+                      </span>
+                    </p>
+                    <span className="text-[10px] text-slate-400 font-medium">
+                      {item.time}
+                    </span>
+                  </div>
+                </div>
+
+                <div className="shrink-0">
+                  <Badge variant="primary" size="sm">
+                    {item.score}
+                  </Badge>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+
+        {/* Quick Management Shortcuts (1 Col) */}
+        <div className="space-y-4">
+          <div className="bg-gradient-to-br from-slate-900 to-slate-800 text-white rounded-2xl p-5 sm:p-6 shadow-soft border border-slate-800 flex flex-col justify-between">
+            <div>
+              <span className="text-[10px] font-bold tracking-widest text-[#a99bf0] uppercase block mb-2">
+                FACULTY TOOLS
+              </span>
+              <h4 className="text-base font-bold text-white">Create New Assessment</h4>
+              <p className="text-xs text-slate-300 mt-1.5 leading-relaxed">
+                Author customized multiple-choice items with dynamic rubrics and automated grading.
+              </p>
+            </div>
+
+            <button
+              onClick={() => navigate("/trainer/assessments/new")}
+              className="mt-5 w-full py-2.5 px-4 rounded-xl text-xs font-bold text-slate-950 bg-accent-gradient hover:opacity-95 shadow-sm transition-all flex items-center justify-center gap-2"
+            >
+              <span>Launch Question Builder</span>
+              <ArrowRight className="w-3.5 h-3.5" />
+            </button>
+          </div>
+
+          <div className="bg-white rounded-2xl border border-slate-200/80 p-5 shadow-soft">
+            <h4 className="text-xs font-bold uppercase tracking-wider text-slate-900 mb-2">
+              Next Cohort Milestone
+            </h4>
+            <p className="text-xs text-slate-800 font-semibold">
+              Mid-Term Evaluation Window Closes
+            </p>
+            <p className="text-xs text-slate-500 mt-1">
+              Due Nov 05, 2026. 148 trainees enrolled in current batch.
+            </p>
+            <button
+              onClick={() => navigate("/trainer/participation")}
+              className="mt-3 text-xs font-bold text-teal-700 hover:text-teal-900 flex items-center gap-1"
+            >
+              <span>Inspect Participation Roster</span>
+              <ArrowRight className="w-3.5 h-3.5" />
+            </button>
+          </div>
+        </div>
+      </div>
     </div>
   );
 }
