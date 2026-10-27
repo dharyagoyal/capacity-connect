@@ -1,6 +1,6 @@
 # Capacity Connect — Digital Capacity Building & LMS Portal
 
-A comprehensive, frontend-only Digital Capacity Building and Learning Management Portal for civil servants and government training institutes (SIH / Full-Stack Development submission).
+A comprehensive, frontend-only Digital Capacity Building and Learning Management Portal for civil servants and government training institutes (Full-Stack Development submission).
 
 ---
 
