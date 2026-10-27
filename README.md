@@ -1,16 +1,63 @@
-# React + Vite
+# Capacity Connect — Digital Capacity Building & LMS Portal
 
-This template provides a minimal setup to get React working in Vite with HMR and some Oxlint rules.
+A comprehensive, frontend-only Digital Capacity Building and Learning Management Portal for civil servants and government training institutes (SIH / Full-Stack Development submission).
 
-Currently, two official plugins are available:
+---
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+## 🚀 Quick Start for Teammates (Running Locally)
 
-## React Compiler
+### Prerequisites
+- [Node.js](https://nodejs.org/) (v18.0.0 or higher recommended)
+- `npm` (comes with Node.js)
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+### 1. Installation
+Clone the repository or extract the ZIP file, then install dependencies:
 
-## Expanding the Oxlint configuration
+```bash
+npm install
+```
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and Oxlint's TypeScript related rules in your project.
+### 2. Start the Development Server
+```bash
+npm run dev
+```
+
+Open your browser and navigate to:
+```
+http://localhost:5173/
+```
+
+### 3. Build for Production (Optional)
+To verify or create an optimized production build:
+```bash
+npm run build
+npm run preview
+```
+
+---
+
+## 👥 Portals & Demo Accounts
+
+This application operates with client-side mock state (no backend database required). You can explore both roles:
+
+### 1. Trainee Portal (`/trainee`)
+- **Login Email:** `trainee@capacityconnect.gov.in`
+- **Features:**
+  - **Dashboard:** Progress stats, Continue Learning course cards, upcoming deadlines, notices.
+  - **My Profile:** Civil service qualifications, work experience, skill chips, download certificates.
+  - **Courses:** Module overview, resources (PDFs, PPTs, recorded sessions), assessments, and feedback modal.
+  - **Assessments:** Subject-wise exam list and full timed interactive MCQ test engine with real-time score computation.
+  - **Feedback:** Star-rating rubric and multi-dimensional course evaluation.
+
+### 2. Trainer / Faculty Workspace (`/trainer`)
+- **Login Email:** `trainer@capacityconnect.gov.in`
+- **Features:**
+  - **Dashboard:** Active course stats, Recharts score bar chart, 6-week participation area chart, live submission feed.
+  - **My Profile:** Faculty credentials, research experience, and structured competency mapping tags.
+  - **My Courses:** Enrolled officer counts, cohort completion rates, and curriculum management modal.
+  - **Assessments:** Master assessment registry with search and action triggers.
+  - **Assessment Creator (`/trainer/assessments/new`):** Parameterized test builder with dynamic MCQ question & option cards.
+  - **Participation (`/trainer/participation`):** Course filter, trainee search, score distribution benchmark bar chart, and officer dossiers.
+  - **Resource Library (`/trainer/resources`):** Filter chips (Videos, PPTs, Study Material), asset cards with download/delete, and drag-and-drop upload modal.
+
+> 💡 **Role Switcher:** Use the quick switch button in the bottom left of the sidebar to toggle between Trainee and Trainer roles instantly.
